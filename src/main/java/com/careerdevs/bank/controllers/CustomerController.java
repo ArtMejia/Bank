@@ -49,9 +49,9 @@ public class CustomerController {
     }
 
     @GetMapping("/lastname/{lastname}")
-    public ResponseEntity<Customer> getByLastName(@PathVariable("lastname") String lastName) {
-        Customer requestedCustomer = customerRepository.findByLastName(lastName);
-        return new ResponseEntity<Customer>(requestedCustomer, HttpStatus.OK);
+    public ResponseEntity<List<Customer>> getByLastName(@PathVariable("lastname") String lastName) {
+        List<Customer> requestedCustomer = customerRepository.findAllByLastName(lastName);
+        return new ResponseEntity<>(requestedCustomer, HttpStatus.OK);
     }
 
 
@@ -61,11 +61,13 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(@RequestBody Customer updatedCustomerData) {
-        Customer updateCustomer = customerRepository.save(updatedCustomerData);
-        return new ResponseEntity<>(updateCustomer, HttpStatus.OK);
-    }
+    // Put should never create
+    @PutMapping("/update")
+//    public ResponseEntity<Customer> updateCustomer(@RequestBody Customer updatedCustomerData) {
+//        Customer updateCustomer = customerRepository.save(updatedCustomerData);
+//        return new ResponseEntity<>(updateCustomer, HttpStatus.OK);
+//    }
+
 
     @GetMapping("/bank/{bankId}")
     public ResponseEntity<List<Customer>> getAllByBankId(@PathVariable Long bankId) {

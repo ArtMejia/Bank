@@ -1,5 +1,7 @@
 package com.careerdevs.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +18,7 @@ public class Customer {
 
     @ManyToOne
     @JoinColumn(name = "bank_id", referencedColumnName = "id")
+    @JsonIncludeProperties("id")
     private Bank bank;
 
     public Customer() {

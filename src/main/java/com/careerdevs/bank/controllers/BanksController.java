@@ -88,4 +88,12 @@ public class BanksController {
         return new ResponseEntity<>(foundBanks, HttpStatus.OK);
     }
 
+    @GetMapping("/customer/{id}")
+    public ResponseEntity<Bank> findBankByCustomerId(@PathVariable Long id) {
+        Bank foundBank = bankRepository.getByCustomers_id(id).orElseThrow(
+                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND)
+        );
+        return new ResponseEntity<>(foundBank, HttpStatus.OK);
+    }
+
 }

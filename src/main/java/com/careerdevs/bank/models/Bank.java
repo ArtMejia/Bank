@@ -1,11 +1,12 @@
 package com.careerdevs.bank.models;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Bank {
@@ -17,15 +18,32 @@ public class Bank {
     private String location;
     private String phoneNumber;
 
+    @OneToMany(mappedBy = "bank", fetch = FetchType.LAZY) // if error change to eager
+//    @JsonIncludeProperties({"firstName", "lastName", "id"})
+    @JsonIgnoreProperties({"email", "age", "location", "bank"})
+//    Include is a whitelist, only includes what is entered
+//    Ignore is a blacklist, excludes what is entered
+
+    private List<Customer> customers;
+    // could use a set instead of list to enforce uniqueness. no duplicates
+
     public Bank(String name, String location, String phoneNumber) {
         this.name = name;
         this.location = location;
         this.phoneNumber = phoneNumber;
     }
 
-    // default constructor
+    // default constructor - not needed if there is another constructor in the class. REQUIRED by JPA
     public Bank() {
 
+    }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 
     public Long getId() {

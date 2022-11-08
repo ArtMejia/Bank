@@ -14,6 +14,8 @@ public interface BankRepository extends JpaRepository<Bank, Long> {
     @Query("SELECT b FROM Bank b WHERE b.phoneNumber LIKE ?1%") // ? then 1 stands in for our first variable below
     List<Bank> findAllAreaCodes(String areaCode);
 
+    Optional<Bank> getByCustomers_id(Long id);
+
 }
 
 
