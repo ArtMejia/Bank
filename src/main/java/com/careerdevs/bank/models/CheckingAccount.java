@@ -1,6 +1,10 @@
 package com.careerdevs.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class CheckingAccount {
@@ -14,6 +18,18 @@ public class CheckingAccount {
     private Long balance;
     private Long fee;
 
+    @ManyToMany
+    @JoinTable(
+            name = "customers_account",
+//            reverse the names
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "checking_account_id")
+    )
+
+    @JsonIncludeProperties({"id", "lastName", "bank"})
+    private List<Customer> customers = new ArrayList<>();
+
+
     public CheckingAccount() {
     }
 
@@ -21,6 +37,14 @@ public class CheckingAccount {
         this.alias = alias;
         this.balance = balance;
         this.fee = fee;
+    }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 
     public Long getId() {
