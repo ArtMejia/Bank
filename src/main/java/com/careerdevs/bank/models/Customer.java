@@ -21,6 +21,11 @@ public class Customer {
     @JsonIncludeProperties("id")
     private Bank bank;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "username")
+    @JsonIncludeProperties("username")
+    private User user;
+
     public Customer() {
     }
 
@@ -30,6 +35,14 @@ public class Customer {
         this.email = email;
         this.age = age;
         this.location = location;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Bank getBank() {
