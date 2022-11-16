@@ -8,13 +8,14 @@ import javax.persistence.OneToOne;
 public class User {
 
     @Id
+
     private String username;
 
     private String password;
     private String loginToken;
 
-    @OneToOne(mappedBy = "user")
-    private Customer customer;
+    // @OneToOne(mappedBy = "user")
+    // private Customer customer;
 
     public User(String username, String password, String loginToken) {
         this.username = username;
@@ -49,11 +50,11 @@ public class User {
         this.loginToken = loginToken;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
+//    public Customer getCustomer() {
+//        return customer;
+//    }
+//
+//    public void setCustomer(Customer customer) {
+//        this.customer = customer;
+//    }
 }

@@ -2,8 +2,11 @@ package com.careerdevs.bank.controllers;
 
 import com.careerdevs.bank.models.Bank;
 import com.careerdevs.bank.models.Customer;
+import com.careerdevs.bank.models.User;
 import com.careerdevs.bank.repositories.BankRepository;
 import com.careerdevs.bank.repositories.CustomerRepository;
+import com.careerdevs.bank.repositories.UserRepository;
+import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,8 @@ public class CustomerController {
 
     @Autowired
     private BankRepository bankRepository;
+
+    @Autowired UserRepository userRepository;
 
     @PostMapping("/{bankId}")
     public ResponseEntity<Customer> createOneCustomer(@RequestBody Customer newCustomerData, @PathVariable Long bankId) {
@@ -73,5 +78,23 @@ public class CustomerController {
     public ResponseEntity<List<Customer>> getAllByBankId(@PathVariable Long bankId) {
         List<Customer> allCustomers = customerRepository.findAllByBank_id(bankId);
         return new ResponseEntity<>(allCustomers, HttpStatus.OK);
+    }
+
+    @PostMapping("/token/{loginToken}/{id}")
+    public ResponseEntity<?> getUserByLoginToken(@PathVariable String loginToken, @PathVariable Long id) {
+        User requestedUser = userRepository.findByLoginToken(loginToken).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Customer foundCustomer = customerRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        foundCustomer.setUser(requestedUser);
+        customerRepository.save(foundCustomer);
+        return new ResponseEntity<>(foundCustomer, HttpStatus.OK);
+    }
+
+    @GetMapping("/self/{loginToken}")
+    public ResponseEntity<?> getSelfByLoginToken(@PathVariable String loginToken) {
+        User foundUser = userRepository.findByLoginToken(loginToken).orElseThrow(
+                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Customer foundCustomer = customerRepository.findByUser_username(foundUser.getUsername()).orElseThrow(
+                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return new ResponseEntity<>(foundCustomer, HttpStatus.OK);
     }
 }

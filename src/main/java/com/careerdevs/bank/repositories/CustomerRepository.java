@@ -16,5 +16,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     // Optional<Customer> findById(Long aLong);
 
 //    @Query("SELECT u FROM User WHERE u.username = \n"1"\n")
-//    Optional<Customer> findByUser_Id
+    Optional<Customer> findByUser_username(String username);
 }
