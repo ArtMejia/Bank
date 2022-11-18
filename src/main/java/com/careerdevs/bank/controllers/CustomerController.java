@@ -30,12 +30,14 @@ public class CustomerController {
 
     @Autowired UserRepository userRepository;
 
-    @PostMapping("/{bankId}")
-    public ResponseEntity<Customer> createOneCustomer(@RequestBody Customer newCustomerData, @PathVariable Long bankId) {
+    @PostMapping("/{bankId}/{loginToken}")
+    public ResponseEntity<Customer> createOneCustomer(@RequestBody Customer newCustomerData, @PathVariable Long bankId, @PathVariable String loginToken) {
         // Find the bank by ID in the repository
         // If bank doesn't exist return bad request
         // If bank exist add to newCustomerData and save
+        User user = userRepository.findByLoginToken(loginToken).orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         Bank requestedBank = bankRepository.findById(bankId).orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST)); // bad request is status code 400
+        newCustomerData.setUser(user);
         newCustomerData.setBank(requestedBank);
         Customer newCustomer = customerRepository.save(newCustomerData);
         return new ResponseEntity<>(newCustomer, HttpStatus.CREATED);
@@ -80,7 +82,7 @@ public class CustomerController {
         return new ResponseEntity<>(allCustomers, HttpStatus.OK);
     }
 
-    @PostMapping("/token/{loginToken}/{id}")
+    @PostMapping("/token/{loginToken}/{bankId}")
     public ResponseEntity<?> getUserByLoginToken(@PathVariable String loginToken, @PathVariable Long id) {
         User requestedUser = userRepository.findByLoginToken(loginToken).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Customer foundCustomer = customerRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));

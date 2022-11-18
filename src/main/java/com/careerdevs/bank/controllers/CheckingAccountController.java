@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/checking")
 public class CheckingAccountController {
 
-
     @Autowired
     private CheckingAccountRepository checkingAccountRepository;
 
